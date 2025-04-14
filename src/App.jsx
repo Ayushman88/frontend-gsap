@@ -1,54 +1,85 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useLocation,
+} from "react-router-dom";
+import Home from "./page/Home";
+import Accordion from "./components/AccordianDennis.jsx";
+import { gsap } from "gsap";
+
+// Wrapper to animate page transitions
+const PageWrapper = ({ children }) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    gsap.fromTo(
+      ".page-transition",
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }
+    );
+  }, [location]);
+
+  return <div className="page-transition">{children}</div>;
+};
 
 const App = () => {
-  const [count, setCount] = useState(0);
-
   return (
-    <div className="min-h-screen flex flex-col p-4 bg-gradient-to-b from-gray-50 to-gray-100">
-      <header className="mb-12">
-        <h1 className="text-4xl text-center font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
-          Ayushman's Vite Template
-        </h1>
-      </header>
+    <Router>
+      <div className="min-h-screen flex flex-col p-4 bg-gradient-to-b from-gray-50 to-gray-100 font-sans">
+        {/* Header */}
+        <header className="mb-12">
+          <h1 className="text-4xl pt-10 text-center font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 tracking-tight">
+            Ayushman's Awwwards-Like Frontend Work
+          </h1>
+          <nav className="mt-6">
+            <ul className="flex justify-center gap-8 text-lg">
+              <li>
+                <Link
+                  to="/"
+                  className="relative text-blue-600 hover:text-blue-800 font-medium transition"
+                >
+                  Home
+                  <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-blue-600 scale-x-0 hover:scale-x-100 origin-left transition-transform duration-300"></span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/accordion-dennis"
+                  className="relative text-blue-600 hover:text-blue-800 font-medium transition"
+                >
+                  Accordion
+                  <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-blue-600 scale-x-0 hover:scale-x-100 origin-left transition-transform duration-300"></span>
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </header>
 
-      <main className="flex-grow">
-        <section className="max-w-2xl mx-auto text-center p-8 bg-white rounded-lg shadow-lg">
-          <h2 className="text-3xl font-semibold mb-6 text-gray-800">
-            Welcome to My Vite Template
-          </h2>
-          <p className="mb-12 text-gray-600 text-lg">
-            This is a starting point for your React applications
+        {/* Main Content with Page Transitions */}
+        <main className="flex-grow">
+          <PageWrapper>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/accordion-dennis" element={<Accordion />} />
+            </Routes>
+          </PageWrapper>
+        </main>
+
+        {/* Footer */}
+        <footer className="mt-12 text-center text-gray-500 border-t border-gray-200 pt-6 pb-4 text-sm">
+          <p>
+            Designed & Developed by{" "}
+            <span className="font-semibold text-blue-600 hover:underline">
+              Ayushman
+            </span>{" "}
+            • © {new Date().getFullYear()}
           </p>
-
-          <div className="flex items-center justify-center gap-6">
-            <button
-              onClick={() => setCount(count - 1)}
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xl rounded-lg 
-              hover:from-blue-600 hover:to-blue-700 transform hover:scale-105 transition-all shadow-md"
-            >
-              −
-            </button>
-            <span className="text-3xl font-bold text-gray-800 w-20">
-              {count}
-            </span>
-            <button
-              onClick={() => setCount(count + 1)}
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xl rounded-lg 
-              hover:from-blue-600 hover:to-blue-700 transform hover:scale-105 transition-all shadow-md"
-            >
-              +
-            </button>
-          </div>
-        </section>
-      </main>
-
-      <footer className="mt-12 text-center text-gray-600">
-        <p className="text-sm">
-          Created with ❤️ by{" "}
-          <span className="font-semibold text-blue-600">Ayushman</span>
-        </p>
-      </footer>
-    </div>
+        </footer>
+      </div>
+    </Router>
   );
 };
 
